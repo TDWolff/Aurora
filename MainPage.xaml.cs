@@ -16,12 +16,20 @@
 
         private async void ScanForDevices()
         {
-            var bluetoothService = new BluetoothService();
-            var devices = await bluetoothService.ScanForDevicesAsync();
-
-            foreach (var device in devices)
+            try
             {
-                ConnectionsBox.Text += $"{device.Name} ({device.Id})\n";
+                var bluetoothService = new BluetoothService();
+                var devices = await bluetoothService.ScanForDevicesAsync();
+                Console.WriteLine("Starting Bluetooth scan...");
+                foreach (var device in devices)
+                {
+                    Console.WriteLine($"Discovered device: {device.Name} ({device.Id})");
+                    ConnectionsBox.Text += $"{device.Name} ({device.Id})\n";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during scan: {ex.Message}");
             }
         }
 
