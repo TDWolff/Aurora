@@ -21,6 +21,8 @@
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
   </Dependencies>
 
+  <DeviceCapability Name="bluetooth" />
+
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
