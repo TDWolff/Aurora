@@ -18,6 +18,7 @@
         {
             try
             {
+                ChatBox.Text += "Scanning for Bluetooth devices...\n";
                 var bluetoothService = new BluetoothService();
                 var devices = await bluetoothService.ScanForDevicesAsync();
                 Console.WriteLine("Starting Bluetooth scan...");
