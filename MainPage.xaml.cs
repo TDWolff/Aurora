@@ -1,9 +1,8 @@
-﻿namespace Aurora
+﻿using Plugin.BLE;
+namespace Aurora
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
@@ -11,6 +10,7 @@
 
         private void OnScanButtonClicked(object sender, EventArgs e)
         {
+            ChatBox.Text += "[DEBUG] Scan button clicked. Starting ScanForDevices method...\n";
             ScanForDevices();
         }
 
@@ -18,18 +18,38 @@
         {
             try
             {
-                ChatBox.Text += "Scanning for Bluetooth devices...\n";
+                ChatBox.Text += "[DEBUG] Scanning for Bluetooth devices...\n";
                 var bluetoothService = new BluetoothService();
+                ChatBox.Text += "[DEBUG] BluetoothService instance created.\n";
+
+                if (!CrossBluetoothLE.Current.IsAvailable)
+                {
+                    ChatBox.Text += "[DEBUG] Bluetooth is not available on this device.\n";
+                    return;
+                }
+
+                if (!CrossBluetoothLE.Current.IsOn)
+                {
+                    ChatBox.Text += "[DEBUG] Bluetooth is turned off. Please enable it.\n";
+                    return;
+                }
+
+                ChatBox.Text += "[DEBUG] Starting device scan...\n";
                 var devices = await bluetoothService.ScanForDevicesAsync();
-                Console.WriteLine("Starting Bluetooth scan...");
+                ChatBox.Text += "[DEBUG] Scan complete. Processing discovered devices...\n";
+                ChatBox.Text += $"[DEBUG] Number of devices discovered: {devices.Count()}\n";
+
                 foreach (var device in devices)
                 {
-                    Console.WriteLine($"Discovered device: {device.Name} ({device.Id})");
+                    ChatBox.Text += $"[DEBUG] Discovered device: {device.Name} ({device.Id})\n";
                     ConnectionsBox.Text += $"{device.Name} ({device.Id})\n";
                 }
+
+                ChatBox.Text += "[DEBUG] Device processing complete.\n";
             }
             catch (Exception ex)
             {
+                ChatBox.Text += $"[DEBUG] Error during scan: {ex.Message}\n";
                 Console.WriteLine($"Error during scan: {ex.Message}");
             }
         }
